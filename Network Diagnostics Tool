@@ -1,10 +1,27 @@
-$ComputerName = "google.com"
+param (
+    [string]$ComputerName = "google.com"
+)
 
 Write-Output "Checking connectivity to $ComputerName..."
-Test-Connection -ComputerName $ComputerName -Count 4
+try {
+    $pingResult = Test-Connection -ComputerName $ComputerName -Count 4 -ErrorAction Stop
+    if ($pingResult.StatusCode -eq 0) {
+        Write-Output "Ping successful."
+    } else {
+        Write-Output "Ping failed."
+    }
+} catch {
+    Write-Error "Unable to connect to $ComputerName"
+}
 
 Write-Output "Checking local IP configuration..."
 Get-NetIPAddress | Format-Table -AutoSize
 
 Write-Output "Checking DNS configuration..."
 Get-DnsClientServerAddress | Format-Table -AutoSize
+
+Write-Output "Checking default gateway..."
+Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Format-Table -AutoSize
+
+Write-Output "Checking network interface status..."
+Get-NetAdapter | Format-Table -AutoSize
