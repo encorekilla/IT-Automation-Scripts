@@ -1,0 +1,10 @@
+$ComputerName = "google.com"
+
+Write-Output "Checking connectivity to $ComputerName..."
+Test-Connection -ComputerName $ComputerName -Count 4
+
+Write-Output "Checking local IP configuration..."
+Get-NetIPAddress | Format-Table -AutoSize
+
+Write-Output "Checking DNS configuration..."
+Get-DnsClientServerAddress | Format-Table -AutoSize
