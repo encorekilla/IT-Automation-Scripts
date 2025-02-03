@@ -1,0 +1,21 @@
+# Define user details
+$FirstName = "John"
+$LastName = "Doe"
+$UserName = "$FirstName.$LastName"
+$Password = ConvertTo-SecureString "SecurePa$$123" -AsPlainText -Force
+$OU = "OU=Users,DC=yourdomain,DC=com"
+
+# Create the user account
+New-ADUser -Name "$FirstName $LastName" `
+    -GivenName $FirstName `
+    -Surname $LastName `
+    -SamAccountName $UserName `
+    -UserPrincipalName "$UserName@yourdomain.com" `
+    -Path $OU `
+    -AccountPassword $Password `
+    -Enabled $true
+
+# Add user to a group
+Add-ADGroupMember -Identity "IT-Support" -Members $UserName
+
+Write-Output "User $UserName has been created successfully!"
